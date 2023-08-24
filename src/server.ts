@@ -2,6 +2,7 @@
 
 import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import { Todo } from './models/Todo';
 import config from './config';
@@ -24,18 +25,20 @@ const todoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    detail: {
-        type: String,
-        required: true,
-    },
     completed: {
-        type: Boolean,
-        required: true
+        type: Boolean
     }
 });
 
 const Todo = mongoose.model('Todo', todoSchema);
 
+const allowedOrigins = ['http://localhost:5000','http://localhost:3000'];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+
+app.use(cors(options));
 app.use(bodyParser.json());
 
 //List all todos

@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.4",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.4.4",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "name": "todo-ts-backend",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "license": "MIT",
+  "scripts": {
+    "eslint": "eslint src/server.ts",
+    "lint": "./node_modules/eslint/bin/eslint.js  src --ext .ts",
+    "build": "tsc -p .",
+    "ts-node-server": "ts-node src/server.ts",
+    "start": "node dist/server.js"
+  }
+}

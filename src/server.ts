@@ -4,21 +4,18 @@ import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { Todo } from './models/Todo';
 import config from './config';
+import connectToDatabase from './db';
 
 const app = express();
 
 // Load environment variables from .env file
-
-const uri = config.MONGODB_URI;
 const PORT = config.NODEPORT;
+const MONGODB_URI = config.MONGODB_URI;
 
-// Connect to MongoDB
-mongoose.connect(uri!, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-} as ConnectOptions);
+if (process.env.NODE_ENV !== "test") {
+    connectToDatabase(MONGODB_URI);
+}
 
 const todoSchema = new mongoose.Schema({
     title: {
@@ -32,13 +29,10 @@ const todoSchema = new mongoose.Schema({
 
 const Todo = mongoose.model('Todo', todoSchema);
 
-const allowedOrigins = ['http://localhost:5000','http://localhost:3000'];
 
-const options: cors.CorsOptions = {
-  origin: allowedOrigins
-};
+//const allowedOrigins = ['http://localhost:5000','http://localhost:3000'];
 
-app.use(cors(options));
+app.use(cors<express.Request>());
 app.use(bodyParser.json());
 
 //List all todos
@@ -72,11 +66,14 @@ app.delete('/todos/:id', async (req, res) => {
     res.json({ message: 'Todo deleted' });
 });
 
-app.listen(PORT!, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+export default app;
 
-
+// Start the server only if this script is the main module
+if (require.main === module) {
+    app.listen(PORT!, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
 
 
 

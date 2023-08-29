@@ -29,8 +29,19 @@ const todoSchema = new mongoose.Schema({
 
 const Todo = mongoose.model('Todo', todoSchema);
 
-
-//const allowedOrigins = ['http://localhost:5000','http://localhost:3000'];
+app.get('/health', async (req, res) => {
+    const healthcheck = {
+        uptime: process.uptime(),
+        message: 'OK',
+        timestamp: Date.now()
+    };
+    try {
+        res.send(healthcheck);
+    } catch (error:any) {
+        healthcheck.message = error;
+        res.status(503).send();
+    }
+});
 
 app.use(cors<express.Request>());
 app.use(bodyParser.json());

@@ -12,6 +12,8 @@ switch (process.env.NODE_ENV) {
 }
 
 export default {
-    MONGODB_URI: process.env.MONGODB_URI,
-    NODEPORT: process.env.NODEPORT
+    DB_ENDPOINT: process.env.DB_ENDPOINT,
+    NODEPORT: process.env.NODEPORT,
+    DB_USER: process.env.DB_USER,
+    DB_PASSWORD: process.env.DB_PASSWORD,
 }

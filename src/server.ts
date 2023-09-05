@@ -1,7 +1,7 @@
 // server.ts
 
 import express from 'express';
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import config from './config';
@@ -9,12 +9,17 @@ import connectToDatabase from './db';
 
 const app = express();
 
-// Load environment variables from .env file
+// Load environment variables from environment
 const PORT = config.NODEPORT;
-const MONGODB_URI = config.MONGODB_URI;
+const DB_ENDPOINT= config.DB_ENDPOINT;
+const DB_USER = config.DB_USER;
+const DB_PASSWORD = config.DB_PASSWORD;
+
+const DB_CONNECTSTRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_ENDPOINT}:27017/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false`;
+let dbConnection:any;
 
 if (process.env.NODE_ENV !== "test") {
-    connectToDatabase(MONGODB_URI);
+    dbConnection = connectToDatabase(DB_CONNECTSTRING);
 }
 
 const todoSchema = new mongoose.Schema({
@@ -27,7 +32,7 @@ const todoSchema = new mongoose.Schema({
     }
 });
 
-const Todo = mongoose.model('Todo', todoSchema);
+const Todo = dbConnection.model('Todo', todoSchema);
 
 app.get('/health', async (req, res) => {
     const healthcheck = {
@@ -43,7 +48,7 @@ app.get('/health', async (req, res) => {
     }
 });
 
-app.use(cors<express.Request>());
+app.use(cors());
 app.use(bodyParser.json());
 
 //List all todos

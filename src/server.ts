@@ -54,26 +54,26 @@ app.use(bodyParser.json());
 app.options('*', cors());
 
 //List all todos
-app.get('/todos', async (req, res) => {
+app.get('/todos', cors(), async (req, res) => {
     const todos = await Todo.find();
     res.json(todos);
 });
 
 //List a single todo
-app.get('/todos/:id', async (req, res) => {
+app.get('/todos/:id', cors(), async (req, res) => {
     const todo = await Todo.findById(req.params.id);
     res.json(todo);
 });
 
 //Create One Todo
-app.post('/todos', async (req, res) => {
+app.post('/todos', cors(), async (req, res) => {
     const todo = new Todo(req.body);
     await todo.save();
     res.json(todo);
 });
 
 // Update a todo
-app.put('/todos/:id', async (req, res) => {
+app.put('/todos/:id', cors(), async (req, res) => {
     const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(todo);
 });

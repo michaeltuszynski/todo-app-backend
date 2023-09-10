@@ -51,6 +51,8 @@ app.get('/health', async (req, res) => {
 app.use(cors());
 app.use(bodyParser.json());
 
+app.options('*', cors());
+
 //List all todos
 app.get('/todos', async (req, res) => {
     const todos = await Todo.find();
@@ -77,7 +79,7 @@ app.put('/todos/:id', async (req, res) => {
 });
 
 // Delete a todo
-app.delete('/todos/:id', async (req, res) => {
+app.delete('/todos/:id', cors(), async (req, res) => {
     await Todo.findByIdAndDelete(req.params.id);
     res.json({ message: 'Todo deleted' });
 });

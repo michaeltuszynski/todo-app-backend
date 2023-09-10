@@ -1,10 +1,10 @@
-FROM node:18.17.1-slim AS builder
+FROM public.ecr.aws/docker/library/node:18.17.1-bullseye AS builder
 WORKDIR /app
 COPY . .
 RUN yarn install
 RUN yarn build
 
-FROM node:18.17.1-slim AS final
+FROM public.ecr.aws/docker/library/node:18.17.1-bullseye AS final
 WORKDIR /app
 COPY --from=builder ./app/dist ./dist
 COPY package.json .

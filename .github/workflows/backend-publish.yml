@@ -18,8 +18,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: todoappmpt.azurecr.io
-          username: todoappmpt
-          password: gMicqQG9eXMIz3B7cIxeAImQpVdU4mBY+Eug3hPBAl+ACRBprJ/E
+          username: ${{ secrets.acr_username }}}
+          password: ${{ secrets.acr_password }}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

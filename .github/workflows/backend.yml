@@ -2,9 +2,8 @@ name: Push Docker image to custom registry
 
 on:
   push:
-    branches: [ azure ]
-    paths:
-      - 'Dockerfile'
+    branches:
+      - azure
 
 jobs:
   push_to_registry:

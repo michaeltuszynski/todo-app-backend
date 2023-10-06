@@ -11,12 +11,14 @@ const app = express();
 
 // Load environment variables from environment
 const PORT = config.NODEPORT;
-const DB_ENDPOINT= config.DB_ENDPOINT;
-const DB_USER = config.DB_USER;
-const DB_PASSWORD = config.DB_PASSWORD;
-const DB_PORT = config.DB_PORT;
+// const DB_ENDPOINT= config.DB_ENDPOINT;
+// const DB_USER = config.DB_USER;
+// const DB_PASSWORD = config.DB_PASSWORD;
+// const DB_PORT = config.DB_PORT;
 
-const DB_CONNECTSTRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_ENDPOINT}:${DB_PORT}/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false`;
+
+//const DB_CONNECTSTRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_ENDPOINT}:${DB_PORT}/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false`;
+const DB_CONNECTSTRING = `${config.COSMOSDB_CONNECTION_STRING}`
 let dbConnection:any;
 
 if (process.env.NODE_ENV !== "test") {

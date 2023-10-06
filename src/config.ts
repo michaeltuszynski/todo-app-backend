@@ -12,9 +12,10 @@ switch (process.env.NODE_ENV) {
 }
 
 export default {
-    DB_ENDPOINT: process.env.DB_ENDPOINT,
+    //DB_ENDPOINT: process.env.DB_ENDPOINT,
     NODEPORT: process.env.NODEPORT,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_PORT: process.env.DB_PORT
+    // DB_USER: process.env.DB_USER,
+    // DB_PASSWORD: process.env.DB_PASSWORD,
+    // DB_PORT: process.env.DB_PORT
+    COSMOSDB_CONNECTION_STRING: process.env.COSMOSDB_CONNECTION_STRING
 }

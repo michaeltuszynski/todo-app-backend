@@ -2,11 +2,11 @@ import mongoose, { ConnectOptions, Connection } from 'mongoose';
 
 const connectToDatabase = (connectionString: string): Connection => {
 
-    const pathToCertificate = './global-bundle.pem';
+    //const pathToCertificate = './global-bundle.pem';
 
     const options: ConnectOptions = {
         tlsAllowInvalidCertificates: false,
-        tlsCAFile: pathToCertificate
+        //tlsCAFile: pathToCertificate
     }
 
     let dbConnection: Connection;

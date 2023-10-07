@@ -17,8 +17,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: todoappmpt.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}}
-          password: ${{ secrets.ACR_PASSWORD }}}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

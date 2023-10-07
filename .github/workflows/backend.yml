@@ -1,6 +1,14 @@
 name: Push Docker image to custom registry
 
 on:
+  workflow_call:
+    secrets:
+      ACR_USERNAME:
+        description: Username for ACR private registry
+        required: true
+      ACR_PASSWORD:
+        description: Password for ACR private registry
+        required: true
   push:
     branches:
       - azure
@@ -17,8 +25,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: todoappmpt.azurecr.io
-          username: todoappmpt
-          password: gMicqQG9eXMIz3B7cIxeAImQpVdU4mBY+Eug3hPBAl+ACRBprJ/E
+          username: ${{ secrets.ACR_USERNAME }}}
+          password: ${{ secrets.ACR_PASSWORD }}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2

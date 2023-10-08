@@ -12,6 +12,7 @@ const app = express();
 // Load environment variables from environment
 const PORT = config.NODEPORT;
 const DOMAIN = config.DOMAIN;
+console.log(`DOMAIN: ${DOMAIN}`);
 // const DB_ENDPOINT= config.DB_ENDPOINT;
 // const DB_USER = config.DB_USER;
 // const DB_PASSWORD = config.DB_PASSWORD;
@@ -56,7 +57,7 @@ app.use(cors({
     origin: function (origin, callback) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-
+      console.log(origin);
       // Check if the origin contains domain
       if (origin.indexOf(`.${DOMAIN}`) !== -1) {
         return callback(null, true);

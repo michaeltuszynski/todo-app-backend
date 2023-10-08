@@ -58,7 +58,7 @@ app.use(cors({
       if (!origin) return callback(null, true);
 
       // Check if the origin contains domain
-      if (origin.indexOf(`.$${DOMAIN}`) !== -1) {
+      if (origin.indexOf(`.${DOMAIN}`) !== -1) {
         return callback(null, true);
       } else {
         return callback(new Error('Not allowed by CORS'));

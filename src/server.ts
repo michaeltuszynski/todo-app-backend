@@ -8,15 +8,21 @@ import config from './config';
 import connectToDatabase from './db';
 
 const app = express();
+app.use(bodyParser.json());
 
 // Load environment variables from environment
+let DB_CONNECTSTRING = "";
 const PORT = config.NODEPORT;
 const DB_ENDPOINT= config.DB_ENDPOINT;
 const DB_USER = config.DB_USER;
 const DB_PASSWORD = config.DB_PASSWORD;
 const DB_PORT = config.DB_PORT;
 
-const DB_CONNECTSTRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_ENDPOINT}:${DB_PORT}/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false`;
+if (!config.COSMOSDB_CONNECTION_STRING)
+    DB_CONNECTSTRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_ENDPOINT}:${DB_PORT}/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false`;
+else
+    DB_CONNECTSTRING = `${config.COSMOSDB_CONNECTION_STRING}`
+
 let dbConnection:any;
 
 if (process.env.NODE_ENV !== "test") {
@@ -49,10 +55,17 @@ app.get('/health', async (req, res) => {
     }
 });
 
-app.use(cors());
-app.use(bodyParser.json());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  }));
 
-app.options('*', cors());
+app.use('/todos', cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
+  }));
 
 //List all todos
 app.get('/todos', cors(), async (req, res) => {

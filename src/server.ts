@@ -8,6 +8,7 @@ import config from './config';
 import connectToDatabase from './db';
 
 const app = express();
+app.use(bodyParser.json());
 
 // Load environment variables from environment
 const PORT = config.NODEPORT;
@@ -56,10 +57,14 @@ app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
-  },
-));
+  }));
 
-app.use(bodyParser.json());
+app.use('/todos', cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
+  }));
+
 
 
 //List all todos

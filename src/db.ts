@@ -1,26 +1,14 @@
-import mongoose, { ConnectOptions, Connection } from 'mongoose';
+import {Firestore} from '@google-cloud/firestore';
+import config from './config';
 
-const connectToDatabase = (connectionString: string): Connection => {
+const connectToDatabase = (): any => {
 
-    //const pathToCertificate = './global-bundle.pem';
+    const firestore = new Firestore({
+        projectId: config.PROJECT_ID,
+        keyFilename: config.SA_KEY_FILE
+    });
 
-    const options: ConnectOptions = {
-        tlsAllowInvalidCertificates: false,
-        //tlsCAFile: pathToCertificate
-    }
-
-    let dbConnection: Connection;
-    try {
-        dbConnection = mongoose.createConnection(connectionString, options);
-        dbConnection.on('error', console.error.bind(console, 'Connection error:'));
-        dbConnection.once('open', () => {
-            console.log('Successfully connected to the database');
-        });
-        return dbConnection;
-    } catch (error) {
-        console.error('Error while connecting to the database:', error);
-        process.exit(1);
-    }
+    return firestore;
 }
 
 export default connectToDatabase;

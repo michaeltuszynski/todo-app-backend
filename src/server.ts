@@ -1,45 +1,19 @@
 // server.ts
 
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import config from './config';
 import connectToDatabase from './db';
+import config from './config';
 
 const app = express();
 app.use(bodyParser.json());
-
-// Load environment variables from environment
-let DB_CONNECTSTRING = "";
+let Todo = connectToDatabase();
 const PORT = config.NODEPORT;
-const DB_ENDPOINT= config.DB_ENDPOINT;
-const DB_USER = config.DB_USER;
-const DB_PASSWORD = config.DB_PASSWORD;
-const DB_PORT = config.DB_PORT;
 
-if (!config.COSMOSDB_CONNECTION_STRING)
-    DB_CONNECTSTRING = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_ENDPOINT}:${DB_PORT}/?tls=true&tlsCAFile=global-bundle.pem&retryWrites=false`;
-else
-    DB_CONNECTSTRING = `${config.COSMOSDB_CONNECTION_STRING}`
-
-let dbConnection:any;
-
-if (process.env.NODE_ENV !== "test") {
-    dbConnection = connectToDatabase(DB_CONNECTSTRING);
-}
-
-const todoSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-    },
-    completed: {
-        type: Boolean
-    }
-});
-
-const Todo = dbConnection.model('Todo', todoSchema);
+// if (process.env.NODE_ENV !== "test") {
+//     Todo = connectToDatabase();
+// }
 
 app.get('/health', async (req, res) => {
     const healthcheck = {
@@ -68,34 +42,77 @@ app.use('/todos', cors({
   }));
 
 //List all todos
-app.get('/todos', cors(), async (req, res) => {
-    const todos = await Todo.find();
-    res.json(todos);
+
+// Get All ToDos
+app.get('/todos', cors(), async (_req, res) => {
+    try {
+        const todosRef = Todo.collection('todos');
+        const snapshot = await todosRef.get();
+        const todos = snapshot.docs.map((doc:any) => ({id: doc.id, ...doc.data()}));
+
+        res.json(todos);
+    } catch (error:any) {
+        res.status(500).send(error.toString());
+    }
 });
+
 
 //List a single todo
 app.get('/todos/:id', cors(), async (req, res) => {
-    const todo = await Todo.findById(req.params.id);
-    res.json(todo);
+    try {
+        const {id} = req.params;
+        const todoRef = Todo.collection('todos').doc(id);
+        const doc = await todoRef.get();
+
+        if (!doc.exists) {
+          res.json('ToDo not found');
+        } else {
+          res.json({id: doc.id, ...doc.data()});
+        }
+      } catch (error:any) {
+        res.status(500).send(error.toString());
+      }
 });
 
 //Create One Todo
 app.post('/todos', cors(), async (req, res) => {
-    const todo = new Todo(req.body);
-    await todo.save();
-    res.json(todo);
+    try {
+        const {title} = req.body;
+        const todosRef = Todo.collection('todos');
+        const docRef = await todosRef.add({title, completed: false});
+        res.json({id: docRef.id});
+      } catch (error:any) {
+        res.json(error.toString());
+      }
 });
 
 // Update a todo
 app.put('/todos/:id', cors(), async (req, res) => {
-    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(todo);
+    try {
+        const {id} = req.params;
+        const {title, completed} = req.body;
+        const todoRef = Todo.collection('todos').doc(id);
+
+        await todoRef.update({title, completed});
+
+        res.json({id, title, completed});
+      } catch (error:any) {
+        res.status(500).send(error.toString());
+      }
 });
 
 // Delete a todo
 app.delete('/todos/:id', cors(), async (req, res) => {
-    await Todo.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Todo deleted' });
+    try {
+        const {id} = req.params;
+        const todoRef = Todo.collection('todos').doc(id);
+
+        await todoRef.delete();
+
+        res.json();
+      } catch (error:any) {
+        res.json(error.toString());
+      }
 });
 
 export default app;

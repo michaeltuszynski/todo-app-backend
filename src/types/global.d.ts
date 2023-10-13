@@ -1,6 +1,7 @@
 namespace NodeJS {
     interface ProcessEnv {
-      MONGODB_URI: string
       NODEPORT: string
+      PROJECT_ID: string
+      SA_KEY_FILE: string
     }
   }

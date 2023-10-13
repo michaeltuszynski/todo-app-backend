@@ -38,4 +38,4 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: us-central1-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend:latest
+            tags: us-central1-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend/todo-app-backend:latest

@@ -21,7 +21,7 @@ jobs:
         - name: Login to Google Artifact Registry
           uses: docker/login-action@v1
           with:
-            registry: us-docker.pkg.dev
+            registry: us-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend:latest
             username: _json_key
             password: ${{ secrets.GCP_SA_KEY }}
 
@@ -31,4 +31,4 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/todo-app-backend:latest
+            tags: us-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend:${{ github.sha }}

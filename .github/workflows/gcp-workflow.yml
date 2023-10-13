@@ -28,7 +28,7 @@ jobs:
         - name: Login to Artifact Registry
           uses: docker/login-action@v1
           with:
-            registry: us-west2-docker.pkg.dev
+            registry: us-central1-docker.pkg.dev
             username: _json_key
             password: ${{ secrets.GCP_SA_KEY }}
 
@@ -38,4 +38,4 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: us-west2-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend:latest
+            tags: us-central1-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend:latest

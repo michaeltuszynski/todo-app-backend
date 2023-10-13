@@ -9,7 +9,6 @@ WORKDIR /app
 COPY --from=builder ./app/dist ./dist
 COPY package.json .
 COPY yarn.lock .
-COPY global-bundle.pem .
 RUN yarn install --production
 
 EXPOSE 5000

@@ -1,11 +1,17 @@
 import {Firestore} from '@google-cloud/firestore';
 import config from './config';
 
+const email = config.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+const key = config.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+
 const connectToDatabase = (): any => {
 
     const firestore = new Firestore({
         projectId: config.PROJECT_ID,
-        keyFilename: config.SA_KEY_FILE
+        credentials: {
+            client_email: email,
+            private_key: key,
+        },
     });
 
     return firestore;

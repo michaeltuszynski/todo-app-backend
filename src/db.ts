@@ -7,7 +7,7 @@ function getSecretValue() {
     const secretVersion = process.env.SECRET_VERSION!;
 
     const client = new SecretManagerServiceClient();
-    const [version]:any = client.accessSecretVersion({
+    const version:any = client.accessSecretVersion({
       name: `projects/${config.PROJECT_ID}/secrets/${config.SECRET_NAME}/versions/${config.SECRET_VERSION}`,
     });
 

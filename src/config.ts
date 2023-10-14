@@ -14,6 +14,6 @@ switch (process.env.NODE_ENV) {
 export default {
     NODEPORT: process.env.NODEPORT,
     PROJECT_ID: process.env.PROJECT_ID,
-    GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY
+    SECRET_NAME: process.env.SECRET_NAME,
+    SECRET_VERSION: process.env.SECRET_VERSION,
 }

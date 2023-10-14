@@ -1,21 +1,28 @@
-import {Firestore} from '@google-cloud/firestore';
+import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import config from './config';
+import * as admin from 'firebase-admin';
 
-const email = config.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-const key = config.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
-console.log(key);
+function getSecretValue() {
+    const secretName = process.env.SECRET_NAME!;
+    const secretVersion = process.env.SECRET_VERSION!;
 
-const connectToDatabase = (): any => {
-
-    const firestore = new Firestore({
-        projectId: config.PROJECT_ID,
-        credentials: {
-            client_email: email,
-            private_key: key,
-        },
+    const client = new SecretManagerServiceClient();
+    const [version]:any = client.accessSecretVersion({
+      name: `projects/${config.PROJECT_ID}/secrets/${config.SECRET_NAME}/versions/${config.SECRET_VERSION}`,
     });
 
-    return firestore;
+    const payload = version.payload.data.toString('utf8');
+    return payload;
+  }
+
+
+const connectToDatabase = (): any => {
+    const serviceAccount = JSON.parse(getSecretValue());
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: `https://${config.PROJECT_ID}.firebaseio.com`
+    });
+    return admin.firestore();
 }
 
 export default connectToDatabase;

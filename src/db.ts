@@ -2,8 +2,8 @@ import {Firestore} from '@google-cloud/firestore';
 import config from './config';
 
 const email = config.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-//const key = config.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
-const key = config.GOOGLE_PRIVATE_KEY
+const key = config.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+console.log(key);
 
 const connectToDatabase = (): any => {
 

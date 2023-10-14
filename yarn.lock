@@ -756,6 +756,13 @@
     google-gax "^4.0.4"
     protobufjs "^7.2.5"
 
+"@google-cloud/secret-manager@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/secret-manager/-/secret-manager-5.0.1.tgz#8ea03952068c5982f5ba23776b268fade2bae425"
+  integrity sha512-elwopNbJhDBYdvCL8V0mbC+8UfXg/ElFosE1uRg7oKzRZJhUchsGE8Cxj1av807UkZvc4yzWCFg6/UXVXON3Kg==
+  dependencies:
+    google-gax "^4.0.3"
+
 "@grpc/grpc-js@~1.9.0":
   version "1.9.5"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.9.5.tgz#22e283754b7b10d1ad26c3fb21849028dcaabc53"
@@ -2671,7 +2678,7 @@ google-auth-library@^9.0.0:
     jws "^4.0.0"
     lru-cache "^6.0.0"
 
-google-gax@^4.0.4:
+google-gax@^4.0.3, google-gax@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-4.0.4.tgz#b309560b4ac775df71f86e6607ebcf6fa98a04a2"
   integrity sha512-Yoey/ABON2HaTUIRUt5tTQAvwQ6E/2etSyFXwHNVcYtIiYDpKix7G4oorZdkp17gFiYovzRCRhRZYrfdCgRK9Q==

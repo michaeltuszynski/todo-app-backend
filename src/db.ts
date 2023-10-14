@@ -3,7 +3,7 @@ import config from './config';
 
 const email = config.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 //const key = config.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
-const key = config.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n');
+const key = config.GOOGLE_PRIVATE_KEY
 
 const connectToDatabase = (): any => {
 

@@ -34,22 +34,26 @@ async function initializeFirebase() {
 
         console.log('Firebase has been initialized');
     } catch (error) {
-        console.error('Error initializing Firebase: ', error);
-        process.exit(1); // Exit the process with an error code
+        console.error('FB ERROR', error);
     }
 }
 
 const collectionName = 'myData';
 
 async function initializeDoc() {
-    const db = firestore();
-    const docRef = db.collection(collectionName).doc('myDoc');
-    docRef.set({title: 'Hello World', completed: true});
+    try {
+        const db = firestore();
+        const docRef = db.collection(collectionName).doc('myDoc');
+        docRef.set({title: 'Hello World', completed: true});
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 initializeFirebase();
 
 app.get('/', async (req, res) => {
+    await initializeFirebase();
     await initializeDoc();
     res.send('Hello World!');
 });

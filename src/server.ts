@@ -1,7 +1,7 @@
 import express from 'express';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { initializeApp, credential, firestore } from 'firebase-admin';
-import * as admin from 'firebase-admin';
+//import * as admin from 'firebase-admin';
 import bodyParser from 'body-parser';
 import config from './config';
 
@@ -13,6 +13,7 @@ async function initializeFirebase() {
     const projectID = config.PROJECT_ID;
     const secretName = config.SECRET_NAME;
     const secretVersion = config.SECRET_VERSION;
+    const databaseName = config.DATABASE_NAME;
 
     const name = `projects/${projectID}/secrets/${secretName}/versions/${secretVersion}`;
 
@@ -26,8 +27,9 @@ async function initializeFirebase() {
         const serviceAccountKey = JSON.parse(version.payload?.data?.toString() || '');
 
         // Initialize the Firebase Admin SDK with the obtained service account key
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccountKey),
+        initializeApp({
+            credential: credential.cert(serviceAccountKey),
+            databaseURL: `https://${databaseName}.firebaseio.com`
         });
 
         console.log('Firebase has been initialized');

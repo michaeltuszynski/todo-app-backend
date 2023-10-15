@@ -1,6 +1,7 @@
 import express from 'express';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { initializeApp, credential, firestore } from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import bodyParser from 'body-parser';
 import config from './config';
 
@@ -8,44 +9,51 @@ const app = express();
 app.use(bodyParser.json());
 const port = config.NODEPORT || 5000;
 
-const getFirebaseCredentialsFromSecretManager = async () => {
-  const client = new SecretManagerServiceClient();
-  const secretName = `projects/${config.PROJECT_ID}/secrets/${config.SECRET_NAME}/versions/${config.SECRET_VERSION}`;
-  console.log(`Fetching secret from ${secretName}`);
-  const [version] = await client.accessSecretVersion({name: secretName});
-  const payload = version.payload?.data?.toString() || '';
-  return JSON.parse(payload);
-};
+async function initializeFirebase() {
+    const projectID = config.PROJECT_ID;
+    const secretName = config.SECRET_NAME;
+    const secretVersion = config.SECRET_VERSION;
 
-app.get('/', async (req, res) => {
+    const name = `projects/${projectID}/secrets/${secretName}/versions/${secretVersion}`;
+
+    const secretClient = new SecretManagerServiceClient();
+
     try {
-      const firebaseCredentials = await getFirebaseCredentialsFromSecretManager();
-      initializeApp({
-        credential: credential.cert(firebaseCredentials),
-      });
+        // Access the secret version
+        const [version] = await secretClient.accessSecretVersion({ name });
 
-      res.status(200).send('API is working');
+        // Parse secret payload as JSON, assuming the secret is a JSON string
+        const serviceAccountKey = JSON.parse(version.payload?.data?.toString() || '');
+
+        // Initialize the Firebase Admin SDK with the obtained service account key
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccountKey),
+        });
+
+        console.log('Firebase has been initialized');
     } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error initializing Firebase: ', error);
+        process.exit(1); // Exit the process with an error code
     }
-  });
+}
 
-  const collectionName = 'myData'; // Specify your collection name
+initializeFirebase();
 
-  app.post('/todos', async (req, res) => {
+const collectionName = 'myData'; // Specify your collection name
+
+app.post('/todos', async (req, res) => {
     try {
-      const { data } = req.body;
-      const db = firestore();
-      const docRef = await db.collection(collectionName).add(data);
-      res.status(201).send({ id: docRef.id });
+        const { data } = req.body;
+        const db = firestore();
+        const docRef = await db.collection(collectionName).add(data);
+        res.status(201).send({ id: docRef.id });
     } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+        console.error(error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
 
-  app.get('/todos', async (req, res) => {
+app.get('/todos', async (req, res) => {
     try {
       const db = firestore();
       const snapshot = await db.collection(collectionName).get();
@@ -56,9 +64,9 @@ app.get('/', async (req, res) => {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
-  });
+});
 
-  app.get('/todos/:id', async (req, res) => {
+app.get('/todos/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const db = firestore();
@@ -72,9 +80,9 @@ app.get('/', async (req, res) => {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
-  });
+});
 
-  app.put('/todos/:id', async (req, res) => {
+app.put('/todos/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const { data } = req.body;
@@ -85,9 +93,9 @@ app.get('/', async (req, res) => {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
-  });
+});
 
-  app.delete('/todos/:id', async (req, res) => {
+app.delete('/todos/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const db = firestore();
@@ -97,7 +105,7 @@ app.get('/', async (req, res) => {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
-  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

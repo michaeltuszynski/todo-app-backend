@@ -39,7 +39,14 @@ async function initializeFirebase() {
 
 initializeFirebase();
 
-const collectionName = 'myData'; // Specify your collection name
+const collectionName = 'myData';
+const db = firestore();
+const docRef = db.collection(collectionName).doc('myDoc');
+docRef.set({title: 'Hello World', completed: true});
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
 app.post('/todos', async (req, res) => {
     try {

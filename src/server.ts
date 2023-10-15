@@ -37,14 +37,18 @@ async function initializeFirebase() {
     }
 }
 
+const collectionName = 'myData';
+
+async function initializeDoc() {
+    const db = firestore();
+    const docRef = db.collection(collectionName).doc('myDoc');
+    docRef.set({title: 'Hello World', completed: true});
+}
+
 initializeFirebase();
 
-const collectionName = 'myData';
-const db = firestore();
-const docRef = db.collection(collectionName).doc('myDoc');
-docRef.set({title: 'Hello World', completed: true});
-
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+    await initializeDoc();
     res.send('Hello World!');
 });
 

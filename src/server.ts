@@ -10,13 +10,14 @@ const port = config.NODEPORT || 5000;
 
 const getFirebaseCredentialsFromSecretManager = async () => {
   const client = new SecretManagerServiceClient();
-  const secretName = `projects/${config.PROJECT_ID}/secrets/${config.SECRET_NAME}/versions/latest`;
+  const secretName = `projects/${config.PROJECT_ID}/secrets/${config.SECRET_NAME}/versions/${config.SECRET_VERSION}`;
+  console.log(`Fetching secret from ${secretName}`);
   const [version] = await client.accessSecretVersion({name: secretName});
   const payload = version.payload?.data?.toString() || '';
   return JSON.parse(payload);
 };
 
-app.get('/health', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
       const firebaseCredentials = await getFirebaseCredentialsFromSecretManager();
       initializeApp({

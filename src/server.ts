@@ -1,7 +1,6 @@
 import express from 'express';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { initializeApp, credential, firestore } from 'firebase-admin';
-//import * as admin from 'firebase-admin';
 import bodyParser from 'body-parser';
 import config from './config';
 
@@ -53,12 +52,13 @@ async function initializeDoc() {
 initializeFirebase();
 
 app.get('/', async (req, res) => {
-    await initializeFirebase();
+    //await initializeFirebase();
     await initializeDoc();
     res.send('Hello World!');
 });
 
 app.post('/todos', async (req, res) => {
+   initializeFirebase();
     try {
         const { data } = req.body;
         const db = firestore();
@@ -71,6 +71,7 @@ app.post('/todos', async (req, res) => {
 });
 
 app.get('/todos', async (req, res) => {
+    initializeFirebase();
     try {
       const db = firestore();
       const snapshot = await db.collection(collectionName).get();
@@ -84,6 +85,7 @@ app.get('/todos', async (req, res) => {
 });
 
 app.get('/todos/:id', async (req, res) => {
+    initializeFirebase();
     try {
       const { id } = req.params;
       const db = firestore();
@@ -100,6 +102,7 @@ app.get('/todos/:id', async (req, res) => {
 });
 
 app.put('/todos/:id', async (req, res) => {
+    initializeFirebase();
     try {
       const { id } = req.params;
       const { data } = req.body;
@@ -113,6 +116,7 @@ app.put('/todos/:id', async (req, res) => {
 });
 
 app.delete('/todos/:id', async (req, res) => {
+    initializeFirebase();
     try {
       const { id } = req.params;
       const db = firestore();

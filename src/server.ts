@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { Firestore } from '@google-cloud/firestore';
 import config from './config';
+import cors from 'cors';
+
 
 const app = express();
 
@@ -13,6 +15,7 @@ const secretVersion = config.SECRET_VERSION;
 const collectionName = config.COLLECTION_NAME;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 let firestore: Firestore;
 

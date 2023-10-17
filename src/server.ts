@@ -69,8 +69,8 @@ app.put('/todos/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { title, completed } = req.body;
   try {
-    await firestore.collection(collectionName).doc(id).set({ title, completed }, { merge: true });
-    res.status(200).json({ id, title, completed });
+    const todo = await firestore.collection(collectionName).doc(id).set({ title, completed }, { merge: true });
+    res.json(todo);
   } catch (err:any) {
     res.status(500).json({ error: err.message });
   }
@@ -80,7 +80,7 @@ app.delete('/todos/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     await firestore.collection(collectionName).doc(id).delete();
-    res.status(204).send();  // 204 No Content for successful delete
+    res.json({ message: 'Todo deleted' });
   } catch (err:any) {
     res.status(500).json({ error: err.message });
   }

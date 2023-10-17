@@ -4,6 +4,6 @@ namespace NodeJS {
       PROJECT_ID: string
       SECRET_NAME: string
       SECRET_VERSION: string
-      DATABASE_NAME: string
+      COLLECTION_NAME: string
     }
   }

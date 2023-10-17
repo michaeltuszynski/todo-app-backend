@@ -13,6 +13,7 @@ const port = config.NODEPORT;
 const secretName = config.SECRET_NAME;
 const secretVersion = config.SECRET_VERSION;
 const collectionName = config.COLLECTION_NAME;
+const databaseName = config.DATABASE_NAME;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -25,7 +26,11 @@ async function initFirebase(): Promise<void> {
   const [version] = await client.accessSecretVersion({ name: mySecretName });
   const credentials = JSON.parse(version?.payload?.data?.toString() ?? '');
 
-  firestore = new Firestore({ credentials });
+  firestore = new Firestore({
+    credentials: credentials,
+    projectId: projectId,
+    databaseId: databaseName
+  });
 }
 
 app.get('/todos', async (req: Request, res: Response) => {
@@ -45,7 +50,7 @@ app.post('/todos', async (req: Request, res: Response) => {
   try {
     const { title } = req.body;
     const docRef = await firestore.collection(collectionName).add({ title, completed: false });
-    res.status(201).json({ id: docRef.id });
+    res.json({ docRef });
   } catch (err:any) {
     res.status(500).json({ error: err.message });
   }

@@ -50,7 +50,16 @@ app.post('/todos', async (req: Request, res: Response) => {
   try {
     const { title } = req.body;
     const docRef = await firestore.collection(collectionName).add({ title, completed: false });
-    res.json({ docRef });
+    // Retrieve the newly created todo's data
+    const doc = await docRef.get();
+    const data = doc.data();
+
+    // Respond with the new todo's id, title, and completed
+    res.json({
+      id: docRef.id,
+      title: data?.title,
+      completed: data?.completed
+    });
   } catch (err:any) {
     res.status(500).json({ error: err.message });
   }
@@ -74,9 +83,23 @@ app.put('/todos/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { title, completed } = req.body;
   try {
-    const todo = await firestore.collection(collectionName).doc(id).set({ title, completed }, { merge: true });
-    res.json(todo);
-  } catch (err:any) {
+    await firestore.collection(collectionName).doc(id).set({ title, completed }, { merge: true });
+
+    // Retrieve the updated todo's data
+    const doc = await firestore.collection(collectionName).doc(id).get();
+    if (!doc.exists) {
+      res.status(404).json({ error: 'Todo not found' });
+      return;
+    }
+    const data = doc.data();
+
+    // Respond with the updated todo's data
+    res.json({
+      id: doc.id,
+      title: data?.title,
+      completed: data?.completed
+    });
+  } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
 });
@@ -84,9 +107,18 @@ app.put('/todos/:id', async (req: Request, res: Response) => {
 app.delete('/todos/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
+    const doc = await firestore.collection(collectionName).doc(id).get();
+
+    // Check if the document exists
+    if (!doc.exists) {
+      res.status(404).json({ error: 'Todo not found' });
+      return;
+    }
+
     await firestore.collection(collectionName).doc(id).delete();
     res.json({ message: 'Todo deleted' });
-  } catch (err:any) {
+  } catch (err: any) {
+    console.error("Error deleting todo:", err);  // This will help in debugging
     res.status(500).json({ error: err.message });
   }
 });

@@ -31,6 +31,9 @@ async function initFirebase(): Promise<void> {
     projectId: projectId,
     databaseId: databaseName
   });
+
+  firestore.settings({ ignoreUndefinedProperties: true })
+
 }
 
 app.get('/todos', async (req: Request, res: Response) => {

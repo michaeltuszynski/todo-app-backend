@@ -37,4 +37,8 @@ jobs:
             file: ./Dockerfile
             push: true
             tags: us-central1-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend/todo-app-backend:latest
-
+        - name: Deploy to Cloud Run
+          uses: 'google-github-actions/deploy-cloudrun@v1'
+          with:
+            service: "todoapp-api"
+            image: us-central1-docker.pkg.dev/pelagic-sorter-401721/todo-app-backend/todo-app-backend:latest

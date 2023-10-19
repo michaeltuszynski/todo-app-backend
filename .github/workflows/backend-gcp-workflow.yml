@@ -40,9 +40,9 @@ jobs:
         id: check_service
         run: |
           if gcloud run services describe todoapp-api --region=us-central1 --platform=managed; then
-            echo "{service_exists}={true}" >> $GITHUB_OUTPUT
+            echo "service_exists=true" >> $GITHUB_OUTPUT
           else
-            echo "{service_exists}={false}" >> $GITHUB_OUTPUT
+            echo "service_exists=false" >> $GITHUB_OUTPUT
           fi
       - name: Deploy to Cloud Run
         if: steps.check_service.outputs.service_exists == 'true'

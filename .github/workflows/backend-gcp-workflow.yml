@@ -25,7 +25,7 @@ jobs:
       - name: Login to Artifact Registry
         uses: docker/login-action@v1
         with:
-          registry: ${REGION}-docker.pkg.dev
+          registry: us-central1-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
 

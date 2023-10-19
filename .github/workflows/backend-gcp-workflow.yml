@@ -3,7 +3,7 @@ name: Backend CI/CD Pipeline
 on:
   push:
     branches:
-      - todo-app-backend
+      - gcp
 
 jobs:
   push_to_registry:
